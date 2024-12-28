@@ -42,6 +42,7 @@ public class TShirtScraperSteps {
         tshirtsScrapperMethods.clickOnSection();
     }
 
+
     /**
      * Apply a filter by the specified brand.
      * @param brand The brand name to filter by.

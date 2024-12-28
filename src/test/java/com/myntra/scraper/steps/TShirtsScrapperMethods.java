@@ -58,7 +58,6 @@ public class TShirtsScrapperMethods {
         return true;
     }
 
-
     public void selectBrand(String brand) {
         page.waitForSelector(String.format("//input[@value='%s']/following-sibling::div", brand));
         page.locator(String.format("//input[@value='%s']/following-sibling::div", brand)).click();
