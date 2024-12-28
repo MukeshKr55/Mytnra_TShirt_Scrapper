@@ -13,20 +13,13 @@ public class TShirtScraperSteps {
      */
     @Given("I navigate to the Myntra homepage")
     public void navigateToMyntraHomepage() {
-        try {
-            Playwright playwright = Playwright.create();
-            // Initialize Playwright and launch browser
-            Browser browser = playwright.chromium().launch(new BrowserType.LaunchOptions().setHeadless(false));
-            Page page = browser.newPage();
-            page.navigate("https://www.myntra.com/");
-            System.out.println("Navigated to Myntra homepage.");
+        Playwright playwright = Playwright.create();
+        Browser browser = playwright.chromium().launch(new BrowserType.LaunchOptions().setHeadless(false));
+        Page page = browser.newPage();
+        page.navigate("https://www.myntra.com/");
+        System.out.println("Navigated to Myntra homepage.");
 
-            // Initialize TShirtsScrapperMethods after the page is created
-            tshirtsScrapperMethods = new TShirtsScrapperMethods(page);
-        } catch (Exception e) {
-            System.err.println("Failed to navigate to Myntra homepage.");
-            e.printStackTrace();
-        }
+        tshirtsScrapperMethods = new TShirtsScrapperMethods(page);
     }
 
     /**
@@ -35,12 +28,10 @@ public class TShirtScraperSteps {
      */
     @When("I select the {string} category")
     public void selectCategory(String category) {
-        try {
-            tshirtsScrapperMethods.hoverOnCategory(category);
-        } catch (Exception e) {
-            System.err.println("Failed to select category: " + category);
-            e.printStackTrace();
-        }
+        tshirtsScrapperMethods.hoverOnCategory(category);
+
+        // Assert that the category menu is visible after hovering
+        Assert.assertTrue("Category menu is not visible after hovering", tshirtsScrapperMethods.isCategoryVisible(category));
     }
 
     /**
@@ -48,12 +39,7 @@ public class TShirtScraperSteps {
      */
     @And("I navigate to the T-shirts section")
     public void navigateToSection() {
-        try {
-            tshirtsScrapperMethods.clickOnSection();
-        } catch (Exception e) {
-            System.err.println("Failed to navigate to the T-shirts section.");
-            e.printStackTrace();
-        }
+        tshirtsScrapperMethods.clickOnSection();
     }
 
     /**
@@ -62,14 +48,11 @@ public class TShirtScraperSteps {
      */
     @And("I filter the results by the brand {string}")
     public void filterByBrand(String brand) {
-        try {
-            tshirtsScrapperMethods.searchBrandName(brand);
-            Assert.assertTrue("Brand not available. Please check the brand name.", tshirtsScrapperMethods.isBrandAvailable(brand));
-            tshirtsScrapperMethods.selectBrand(brand);
-        } catch (Exception e) {
-            System.err.println("Failed to apply filter for brand: " + brand);
-            e.printStackTrace();
-        }
+        tshirtsScrapperMethods.searchBrandName(brand);
+        // Assert the brand is visible and available
+        Assert.assertTrue("Brand not available. Please check the brand name.", tshirtsScrapperMethods.isBrandAvailable(brand));
+        tshirtsScrapperMethods.selectBrand(brand);
+
     }
 
     /**
@@ -77,12 +60,9 @@ public class TShirtScraperSteps {
      */
     @Then("I extract the discounted T-shirts' data including price, discount percentage, and link")
     public void extractDiscountedTShirtsData() {
-        try {
-            tshirtsScrapperMethods.extractItems();
-        } catch (Exception e) {
-            System.err.println("Failed to extract discounted T-shirts' data.");
-            e.printStackTrace();
-        }
+        tshirtsScrapperMethods.extractItems();
+        // Assert that items are extracted and the list is not empty
+        Assert.assertFalse("No T-shirt data extracted", tshirtsScrapperMethods.getExtractedTShirts().isEmpty());
     }
 
     /**
@@ -90,12 +70,10 @@ public class TShirtScraperSteps {
      */
     @And("I sort the extracted data by the highest discount first")
     public void sortByHighestDiscount() {
-        try {
-            tshirtsScrapperMethods.sortDiscountedTShirts();
-        } catch (Exception e) {
-            System.err.println("Failed to sort T-shirts by discount.");
-            e.printStackTrace();
-        }
+        tshirtsScrapperMethods.sortDiscountedTShirts();
+        // Assert that the list is sorted by discount in descending order
+        Assert.assertTrue("T-shirts are not sorted by highest discount",
+                tshirtsScrapperMethods.isSortedByDiscount());
     }
 
     /**
@@ -103,11 +81,6 @@ public class TShirtScraperSteps {
      */
     @And("I print the sorted list of discounted T-shirts to the console")
     public void printSortedTShirts() {
-        try {
-            tshirtsScrapperMethods.printTShirts();
-        } catch (Exception e) {
-            System.err.println("Failed to print sorted T-shirts.");
-            e.printStackTrace();
-        }
+        tshirtsScrapperMethods.printTShirts();
     }
 }
